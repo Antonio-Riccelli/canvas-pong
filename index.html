@@ -17,6 +17,9 @@
         let ballSpeedY = 4
         let paddle1Y = 250;
         let paddle2Y = 250;
+        let playerScore = 0;
+        let computerScore = 0;
+        const winningScore = 5;
 
         window.onload = function() {
             canvas = document.getElementById("gameCanvas");
@@ -26,12 +29,19 @@
 
             canvas.addEventListener("keydown", function(e) {
                 console.log("Event key", e.key);
+            
                 if (e.key === "ArrowUp") {
+                    if (paddle1Y < 0 || paddle1Y > canvas.height) {
+                    return
+                }
                     paddle1Y = paddle1Y - 10;
                     console.log(paddle1Y)
                 }
                 if (e.key === "ArrowDown") {
-                    paddle1Y = paddle1Y + 5
+                    if (paddle1Y < 0 || paddle1Y > canvas.height-70) {
+                    return
+                }
+                    paddle1Y = paddle1Y + 10
                 }
               
             })
@@ -42,7 +52,20 @@
             moveEverything();
         }
 
+        function computerMovement() {
+            const paddle2Center = paddle2Y + 35; 
+            if (paddle2Center <= ballY-35) {
+                paddle2Y += 15;
+            }
+
+            if (paddle2Center >= ballY+35) {
+                paddle2Y -= 15;
+            }
+        }
+
         function moveEverything() {
+            computerMovement();
+
             ballX = ballX + ballSpeedX;
             ballY = ballY + ballSpeedY;
 
@@ -52,19 +75,42 @@
                 return
             }
 
+            if (ballX >= canvas.width-20 && (ballY >= paddle2Y && ballY <= paddle2Y + 70)) {
+                ballSpeedX = -ballSpeedX;
+                console.log("Right paddle Y", paddle1Y);
+                return
+            }
+
 
             // IF BALL GOES BEYOND PLAYER'S SIDE
             if ( ballX <= 0) {
-                ballSpeedX = -ballSpeedX;
+                computerScore++;
+                if (computerScore >= winningScore) {
+                    console.log("Computer won!");
+                    computerScore = 0;
+                    playerScore = 0;
+                }
                 ballX = 400;
                 ballY = 300;
+                ballSpeedX = -ballSpeedX;
+  
+                
             }
 
             // IF BALL GOES BEYOND COMPUTER'S SIDE
             if (ballX >= canvas.width) {
-                ballSpeedX = -ballSpeedX;
+                playerScore++;
+                if (playerScore >= winningScore) {
+                    console.log("Player won!");
+                    playerScore = 0;
+                    computerScore = 0;
+                    return
+                }
                 ballX = 400;
                 ballY = 300;
+                ballSpeedX = -ballSpeedX;
+            
+                
             }
 
 
@@ -79,8 +125,12 @@
         function drawEverything() {
             colorRect(0, 0, canvas.width, canvas.height, "black");
             colorCircle(ballX, ballY, 10, "white");
-            colorRect(10, paddle1Y, 10, 70, "white");
-            colorRect(780, paddle2Y, 10, 70, "white");
+            colorRect(0, paddle1Y, 10, 70, "white");
+            colorRect(790, paddle2Y, 10, 70, "white");
+            canvasContext.fillText("Player Score: ", 50, 50);
+            canvasContext.fillText(playerScore, 75, 60);
+            canvasContext.fillText("Computer Score: ", canvas.width-150, 50);
+            canvasContext.fillText(computerScore, canvas.width-115, 60);
        
         }
 
