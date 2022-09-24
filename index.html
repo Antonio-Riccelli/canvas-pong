@@ -7,12 +7,16 @@
     <title>Document</title>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <canvas id="gameCanvas" width="800" height="600" tabindex="1"></canvas>
     <script>
         let canvas;
         let canvasContext;
-        let ballX = 50;
-        let ballSpeedX = 5;
+        let ballX = 400;
+        let ballY = 300;
+        let ballSpeedX = 10;
+        let ballSpeedY = 4
+        let paddle1Y = 250;
+        let paddle2Y = 250;
 
         window.onload = function() {
             canvas = document.getElementById("gameCanvas");
@@ -20,6 +24,17 @@
             const framesPerSecond = 30
             setInterval(callBoth, 1000/framesPerSecond);
 
+            canvas.addEventListener("keydown", function(e) {
+                console.log("Event key", e.key);
+                if (e.key === "ArrowUp") {
+                    paddle1Y = paddle1Y - 10;
+                    console.log(paddle1Y)
+                }
+                if (e.key === "ArrowDown") {
+                    paddle1Y = paddle1Y + 5
+                }
+              
+            })
         };
 
         function callBoth() {
@@ -29,21 +44,56 @@
 
         function moveEverything() {
             ballX = ballX + ballSpeedX;
-            if (ballX >= canvas.width || ballX <= 0) {
+            ballY = ballY + ballSpeedY;
+
+            if (ballX <= 20 && (ballY >= paddle1Y && ballY <= paddle1Y + 70)) {
                 ballSpeedX = -ballSpeedX;
+                console.log("Left paddle Y", paddle1Y);
+                return
+            }
+
+
+            // IF BALL GOES BEYOND PLAYER'S SIDE
+            if ( ballX <= 0) {
+                ballSpeedX = -ballSpeedX;
+                ballX = 400;
+                ballY = 300;
+            }
+
+            // IF BALL GOES BEYOND COMPUTER'S SIDE
+            if (ballX >= canvas.width) {
+                ballSpeedX = -ballSpeedX;
+                ballX = 400;
+                ballY = 300;
+            }
+
+
+            if (ballY >= canvas.height || ballY <= 0) {
+                ballSpeedY = -ballSpeedY;
+                // ballX = 400;
+                // ballY = 300;
             }
 
         }
 
         function drawEverything() {
             colorRect(0, 0, canvas.width, canvas.height, "black");
-            colorRect(ballX, 210, 10, 10, "blue");
-            colorRect(10, 250, 10, 60, "white");
+            colorCircle(ballX, ballY, 10, "white");
+            colorRect(10, paddle1Y, 10, 70, "white");
+            colorRect(780, paddle2Y, 10, 70, "white");
+       
         }
 
         function colorRect(leftX, topY, width, height, drawColor) {
             canvasContext.fillStyle = drawColor;
             canvasContext.fillRect(leftX, topY, width, height);
+        };
+
+        function colorCircle(leftX, topY, r, color) {
+            canvasContext.fillStyle = color;
+            canvasContext.beginPath();
+            canvasContext.arc(leftX, topY, r, 0, Math.PI * 2, true);
+            canvasContext.fill();
         }
 
     </script>
