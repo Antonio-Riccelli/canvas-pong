@@ -29,23 +29,10 @@
 
         setInterval(callBoth, 1000 / framesPerSecond);
 
-        canvas.addEventListener("keydown", function (e) {
-          console.log("Event key", e.key);
-
-          if (e.key === "ArrowUp") {
-            if (paddle1Y <= 0 || paddle1Y > canvas.height) {
-              return;
-            }
-            paddle1Y = paddle1Y - 10;
-            console.log(paddle1Y);
-          }
-          if (e.key === "ArrowDown") {
-            if (paddle1Y < 0 || paddle1Y > canvas.height - 70) {
-              return;
-            }
-            paddle1Y = paddle1Y + 10;
-          }
-        });
+        canvas.addEventListener("mousemove", function(e) {
+            let mousePosition = calculateMousePos(e);
+            paddle1Y = mousePosition.y - 35;
+        })
 
         canvas.addEventListener("mousedown", function (e) {
           if (showingWinScreen) {
@@ -53,10 +40,18 @@
             computerScore = 0;
             showingWinScreen = !showingWinScreen;
           }
-        });
+        });};
 
- 
-      };
+        function calculateMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const root = document.documentElement;
+            const mouseX = e.clientX - rect.left - root.scrollLeft;
+            const mouseY = e.clientY - rect.top - root.scrollTop;
+            return {
+                x: mouseX,
+                y: mouseY
+            }
+        }
 
       function drawNet() {
         for (let i = 10; i < canvas.height; i += 40) {
@@ -96,7 +91,7 @@
           console.log("Left paddle Y", paddle1Y);
 
           let deltaY = ballY - (paddle1Y + 70 / 2);
-          ballSpeedY = deltaY * 0.25;
+          ballSpeedY = deltaY * 0.35;
 
           return;
         }
@@ -109,7 +104,7 @@
           ballSpeedX = -ballSpeedX;
           console.log("Right paddle Y", paddle1Y);
           let deltaY = ballY - (paddle2Y + 70 / 2);
-          ballSpeedY = deltaY * 0.25;
+          ballSpeedY = deltaY * 0.35;
           return;
         }
 
