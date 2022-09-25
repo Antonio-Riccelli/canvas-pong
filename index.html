@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Pong</title>
 </head>
 <body>
     <canvas id="gameCanvas" width="800" height="600" tabindex="1"></canvas>
@@ -20,6 +20,7 @@
         let playerScore = 0;
         let computerScore = 0;
         const winningScore = 5;
+        let showingWinScreen = false;
 
         window.onload = function() {
             canvas = document.getElementById("gameCanvas");
@@ -28,10 +29,11 @@
             setInterval(callBoth, 1000/framesPerSecond);
 
             canvas.addEventListener("keydown", function(e) {
+
                 console.log("Event key", e.key);
             
                 if (e.key === "ArrowUp") {
-                    if (paddle1Y < 0 || paddle1Y > canvas.height) {
+                    if (paddle1Y <= 0 || paddle1Y > canvas.height) {
                     return
                 }
                     paddle1Y = paddle1Y - 10;
@@ -45,6 +47,16 @@
                 }
               
             })
+        
+            canvas.addEventListener("mousedown", function(e) {
+                if (showingWinScreen) {
+                    playerScore = 0;
+                    computerScore = 0;
+                    showingWinScreen = !showingWinScreen;
+
+                }
+            })
+        
         };
 
         function callBoth() {
@@ -55,15 +67,21 @@
         function computerMovement() {
             const paddle2Center = paddle2Y + 35; 
             if (paddle2Center <= ballY-35) {
-                paddle2Y += 15;
+                paddle2Y += 10;
             }
 
             if (paddle2Center >= ballY+35) {
-                paddle2Y -= 15;
+                paddle2Y -= 10;
             }
         }
 
         function moveEverything() {
+
+            if (showingWinScreen) {
+                return
+            }
+
+
             computerMovement();
 
             ballX = ballX + ballSpeedX;
@@ -72,12 +90,18 @@
             if (ballX <= 20 && (ballY >= paddle1Y && ballY <= paddle1Y + 70)) {
                 ballSpeedX = -ballSpeedX;
                 console.log("Left paddle Y", paddle1Y);
+
+                let deltaY = ballY - (paddle1Y+70/2);
+                ballSpeedY = deltaY * 0.25;
+
                 return
             }
 
             if (ballX >= canvas.width-20 && (ballY >= paddle2Y && ballY <= paddle2Y + 70)) {
                 ballSpeedX = -ballSpeedX;
                 console.log("Right paddle Y", paddle1Y);
+                let deltaY = ballY - (paddle2Y+70/2);
+                ballSpeedY = deltaY * 0.25;
                 return
             }
 
@@ -87,8 +111,8 @@
                 computerScore++;
                 if (computerScore >= winningScore) {
                     console.log("Computer won!");
-                    computerScore = 0;
-                    playerScore = 0;
+                    showingWinScreen = true;
+
                 }
                 ballX = 400;
                 ballY = 300;
@@ -102,8 +126,8 @@
                 playerScore++;
                 if (playerScore >= winningScore) {
                     console.log("Player won!");
-                    playerScore = 0;
-                    computerScore = 0;
+                    showingWinScreen = true;
+ 
                     return
                 }
                 ballX = 400;
@@ -123,6 +147,20 @@
         }
 
         function drawEverything() {
+            colorRect(0, 0, canvas.width, canvas.height, "black");
+
+            if (showingWinScreen) {
+                canvasContext.fillStyle = "white";
+                if (playerScore >= winningScore) {
+                    canvasContext.fillText("Player won!", 450, 450);
+                }
+                if (computerScore >= winningScore) {
+                    canvasContext.fillText("Computer won!", 450, 450);
+                }
+                
+                canvasContext.fillText("Click to continue", 500, 500);
+                return
+            }
             colorRect(0, 0, canvas.width, canvas.height, "black");
             colorCircle(ballX, ballY, 10, "white");
             colorRect(0, paddle1Y, 10, 70, "white");
