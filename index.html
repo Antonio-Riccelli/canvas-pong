@@ -157,13 +157,13 @@
         if (showingWinScreen) {
           canvasContext.fillStyle = "white";
           if (playerScore >= winningScore) {
-            canvasContext.fillText("Player won!", 450, 450);
+            canvasContext.fillText("Player won!", canvas.width/2 - 60, canvas.height/2 - 50);
           }
           if (computerScore >= winningScore) {
-            canvasContext.fillText("Computer won!", 450, 450);
+            canvasContext.fillText("Computer won!", canvas.width/2 - 60, canvas.height/2 - 50);
           }
 
-          canvasContext.fillText("Click to continue", 500, 500);
+          canvasContext.fillText("Click to continue", canvas.width/2 - 60, canvas.height/2 - 35);
           return;
         }
         // colorRect(0, 0, canvas.width, canvas.height, "black");
@@ -174,8 +174,8 @@
      
         canvasContext.fillText("Player Score: ", 50, 50);
         canvasContext.fillText(playerScore, 75, 60);
-        canvasContext.fillText("Computer Score: ", canvas.width - 150, 50);
-        canvasContext.fillText(computerScore, canvas.width - 115, 60);
+        canvasContext.fillText("Computer Score: ", canvas.width - 120, 50);
+        canvasContext.fillText(computerScore, canvas.width - 85, 60);
       }
 
       function colorRect(leftX, topY, width, height, drawColor) {
