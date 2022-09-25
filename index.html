@@ -32,6 +32,15 @@
 
         canvas.addEventListener("mousemove", function(e) {
             let mousePosition = calculateMousePos(e);
+            if (mousePosition.y - 35 < 0) {
+              paddle1Y = 1;
+              return
+            }
+            if (mousePosition.y >= canvas.height - 35) {
+              paddle1Y = canvas.height - 70;
+              console.log("New paddle1y", paddle1Y);
+              return
+            }
             paddle1Y = mousePosition.y - 35;
         })
 
