@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pong</title>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <canvas id="gameCanvas" width="800" height="600" tabindex="1"></canvas>
@@ -134,7 +135,7 @@
           ballSpeedX = -ballSpeedX;
         }
 
-        if (ballY >= canvas.height || ballY <= 0) {
+        if (ballY >= canvas.height - 10 || ballY <= 0 + 10) {
           ballSpeedY = -ballSpeedY;
           // ballX = 400;
           // ballY = 300;

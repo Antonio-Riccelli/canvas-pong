@@ -1,0 +1,15 @@
+body {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: rgb(17,10,130);
+    background: linear-gradient(90deg, rgba(17,10,130,1) 0%, rgba(20,20,199,0.6364816190147935) 45%, rgba(18,176,208,1) 100%);
+}
+
+
+#gameCanvas {
+    margin: 0 auto;
+    border: 2px solid black;
+}
